@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import ModelSelector from './components/ModelSelector';
-import ChatWindow from './components/ChatWindow';
-import InputBox from './components/InputBox';
+import Header from './components/Header';
+import ChatArea from './components/ChatArea';
+import InputArea from './components/InputArea';
 
 function App() {
     const [selectedModel, setSelectedModel] = useState('');
@@ -42,20 +42,16 @@ function App() {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                // Decode chunk and add to buffer
                 const chunk = decoder.decode(value, { stream: true });
                 buffer += chunk;
 
-                // Split buffer by newlines to process complete JSON objects
                 const lines = buffer.split('\n');
-                // Keep the last part in buffer (it might be incomplete)
                 buffer = lines.pop();
 
                 for (const line of lines) {
                     if (!line.trim()) continue;
                     try {
                         const json = JSON.parse(line);
-                        // Extract content from Ollama format: { message: { content: "..." } }
                         const content = json.message?.content || '';
 
                         if (content) {
@@ -90,19 +86,21 @@ function App() {
     };
 
     return (
-        <div className="flex flex-col h-full font-sans">
-            <ModelSelector
+        <>
+            <Header
                 selectedModel={selectedModel}
                 onSelectModel={setSelectedModel}
             />
 
-            <ChatWindow messages={messages} />
+            <main>
+                <ChatArea messages={messages} />
+            </main>
 
-            <InputBox
+            <InputArea
                 onSend={handleSend}
                 disabled={isStreaming || !selectedModel}
             />
-        </div>
+        </>
     );
 }
 
