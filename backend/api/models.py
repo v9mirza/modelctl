@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from backend.core.ollama import AsyncOllamaClient
+from core.ollama import AsyncOllamaClient
 
 router = APIRouter()
 

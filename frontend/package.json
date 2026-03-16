@@ -9,10 +9,13 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@tanstack/react-virtual": "^3.13.23",
         "clsx": "^2.1.1",
         "lucide-react": "^0.563.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-markdown": "^10.1.0",
+        "react-syntax-highlighter": "^16.1.1",
         "tailwind-merge": "^3.4.0"
     },
     "devDependencies": {

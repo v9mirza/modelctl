@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.api import models, chat
+from api import models, chat
 
 app = FastAPI(title="modelctl backend")
 
