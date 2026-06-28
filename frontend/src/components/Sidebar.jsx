@@ -36,7 +36,6 @@ export default function Sidebar({ conversations, currentId, onNewChat, onSelect,
                     <Plus size={14} className="btn-icon" />
                     <span className="btn-text">New Chat</span>
                 </div>
-                <kbd className="shortcut-badge">⌥N</kbd>
             </button>
 
             <div className="sidebar-search-wrapper">
@@ -49,12 +48,10 @@ export default function Sidebar({ conversations, currentId, onNewChat, onSelect,
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                {search ? (
+                {search && (
                     <button className="sidebar-search-clear" onClick={() => setSearch('')} title="Clear">
                         <X size={12} />
                     </button>
-                ) : (
-                    <kbd className="search-kbd-hint">⌘K</kbd>
                 )}
             </div>
 
