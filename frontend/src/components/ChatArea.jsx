@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import MessageBubble from './MessageBubble';
-import { Terminal, Database, Palette, Code2, Sparkles } from 'lucide-react';
+import { Terminal, Database, Palette, Code2, Cpu } from 'lucide-react';
 
 function EmptyState({ onPrefill }) {
     const suggestions = [
@@ -38,7 +38,7 @@ function EmptyState({ onPrefill }) {
     return (
         <div className="empty-state-minimal">
             <div className="empty-state-logo-wrapper">
-                <Sparkles size={32} className="empty-logo-sparkle" />
+                <Cpu size={28} />
             </div>
             
             <h1 className="empty-title">What can we build today?</h1>
