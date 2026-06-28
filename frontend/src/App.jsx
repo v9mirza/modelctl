@@ -197,6 +197,33 @@ function App() {
         setPrefill({ text: msg.content, ts: Date.now() });
     }, [messages, currentId, isStreaming]);
 
+    const handlePrefillMessage = useCallback((text) => {
+        setPrefill({ text, ts: Date.now() });
+    }, []);
+
+    // Raycast style: trigger suggestion cards on keys 1-4 when not typing in textarea
+    useEffect(() => {
+        const handler = (e) => {
+            if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+                return;
+            }
+            if (messages.length === 0) {
+                const suggestions = [
+                    "Write a Python script to parse log files, extract error messages, and output a summary count of each unique error type.",
+                    "Optimize this SQL query to retrieve the top 5 most active users in the past month, grouped by their transaction count and status.",
+                    "Provide a Vanilla CSS snippet for a glassmorphic card component with a thin glowing border, backdrop blur, and smooth shadow.",
+                    "Explain how to debug and optimize a slow rendering React component that processes large lists, showing examples using memoization."
+                ];
+                if (e.key === '1') { e.preventDefault(); handlePrefillMessage(suggestions[0]); }
+                else if (e.key === '2') { e.preventDefault(); handlePrefillMessage(suggestions[1]); }
+                else if (e.key === '3') { e.preventDefault(); handlePrefillMessage(suggestions[2]); }
+                else if (e.key === '4') { e.preventDefault(); handlePrefillMessage(suggestions[3]); }
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [messages.length, handlePrefillMessage]);
+
     return (
         <div className="app-layout">
             <Sidebar
@@ -221,6 +248,7 @@ function App() {
                     isStreaming={isStreaming}
                     onRegenerate={handleRegenerate}
                     onEditMessage={handleEditMessage}
+                    onPrefill={handlePrefillMessage}
                 />
 
                 <InputArea

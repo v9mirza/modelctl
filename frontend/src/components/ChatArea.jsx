@@ -1,22 +1,71 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import MessageBubble from './MessageBubble';
+import { Terminal, Database, Palette, Code2, Sparkles } from 'lucide-react';
 
-function EmptyState() {
+function EmptyState({ onPrefill }) {
+    const suggestions = [
+        {
+            number: "1",
+            title: "Write log parser",
+            desc: "Create a Python script to scan server log records and summarize errors.",
+            prompt: "Write a Python script to parse log files, extract error messages, and output a summary count of each unique error type.",
+            icon: <Terminal size={13} />
+        },
+        {
+            number: "2",
+            title: "Optimize SQL query",
+            desc: "Refactor a grouped transaction count statement for high performance.",
+            prompt: "Optimize this SQL query to retrieve the top 5 most active users in the past month, grouped by their transaction count and status.",
+            icon: <Database size={13} />
+        },
+        {
+            number: "3",
+            title: "CSS glassmorphic styles",
+            desc: "Create Vanilla CSS tokens for frosted glass borders and shadows.",
+            prompt: "Provide a Vanilla CSS snippet for a glassmorphic card component with a thin glowing border, backdrop blur, and smooth shadow.",
+            icon: <Palette size={13} />
+        },
+        {
+            number: "4",
+            title: "Optimize React renders",
+            desc: "Identify and resolve hook render cycles in virtual lists.",
+            prompt: "Explain how to debug and optimize a slow rendering React component that processes large lists, showing examples using memoization.",
+            icon: <Code2 size={13} />
+        }
+    ];
+
     return (
-        <div className="empty-state">
-            <svg height="48" viewBox="0 0 24 24" fill="currentColor" style={{ marginBottom: 16, color: 'var(--text-secondary)' }}>
-                <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" />
-            </svg>
-            <p className="empty-state-title">Start a new discussion</p>
-            <p className="empty-state-hint">Ctrl+Shift+O · new chat</p>
+        <div className="empty-state-minimal">
+            <div className="empty-state-logo-wrapper">
+                <Sparkles size={32} className="empty-logo-sparkle" />
+            </div>
+            
+            <h1 className="empty-title">What can we build today?</h1>
+            <p className="empty-subtitle">Choose a model to begin, or select a preset command below.</p>
+
+            <div className="suggestions-menu-list">
+                {suggestions.map((s, idx) => (
+                    <div
+                        key={idx}
+                        className="suggestion-menu-item"
+                        onClick={() => onPrefill(s.prompt)}
+                    >
+                        <div className="item-left-side">
+                            <span className="item-icon-tag">{s.icon}</span>
+                            <span className="item-title">{s.title}</span>
+                            <span className="item-desc-inline">— {s.desc}</span>
+                        </div>
+                        <kbd className="item-kbd-badge">{s.number}</kbd>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
 
-export default function ChatArea({ messages, isStreaming, onRegenerate, onEditMessage }) {
+export default function ChatArea({ messages, isStreaming, onRegenerate, onEditMessage, onPrefill }) {
     const parentRef = useRef(null);
-    // true = we're pinned to the bottom, auto-scroll on new content
     const autoScrollRef = useRef(true);
 
     const virtualizer = useVirtualizer({
@@ -26,7 +75,6 @@ export default function ChatArea({ messages, isStreaming, onRegenerate, onEditMe
         overscan: 5,
     });
 
-    // When user scrolls up manually, disengage auto-scroll
     const handleScroll = useCallback(() => {
         const el = parentRef.current;
         if (!el) return;
@@ -34,12 +82,10 @@ export default function ChatArea({ messages, isStreaming, onRegenerate, onEditMe
         autoScrollRef.current = distFromBottom < 80;
     }, []);
 
-    // Re-engage auto-scroll whenever a new message is appended
     useEffect(() => {
         autoScrollRef.current = true;
     }, [messages.length]);
 
-    // Scroll to bottom when content grows (streaming tokens or new message)
     useEffect(() => {
         if (messages.length === 0 || !autoScrollRef.current) return;
         const el = parentRef.current;
@@ -51,7 +97,7 @@ export default function ChatArea({ messages, isStreaming, onRegenerate, onEditMe
     return (
         <div ref={parentRef} className="chat-scroll-area" onScroll={handleScroll}>
             {messages.length === 0 ? (
-                <EmptyState />
+                <EmptyState onPrefill={onPrefill} />
             ) : (
                 <div
                     className="chat-virtual-container"

@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ArrowUp, Square } from 'lucide-react';
 
 function TokenCounter({ tokenCount, contextLimit }) {
     const pct = tokenCount / contextLimit;
-    const color = pct > 0.85 ? '#f85149' : pct > 0.6 ? '#d29922' : 'var(--text-secondary)';
-    const warning = pct > 0.85 ? '⚠ Near context limit' : pct > 0.6 ? '⚠ Long conversation' : '';
+    const color = pct > 0.85 ? '#ef4444' : pct > 0.6 ? '#f59e0b' : 'var(--accent-primary)';
 
     return (
-        <div className="token-counter">
+        <div className="token-counter-minimal">
             <div className="token-bar-track">
                 <div
                     className="token-bar-fill"
                     style={{ width: `${Math.min(pct * 100, 100)}%`, background: color }}
                 />
             </div>
-            <span style={{ color }}>
-                ~{tokenCount.toLocaleString()} / {contextLimit.toLocaleString()} tokens
-                {warning && <span className="token-warn"> · {warning}</span>}
+            <span className="token-counter-text">
+                {tokenCount.toLocaleString()} / {contextLimit.toLocaleString()} tokens
             </span>
         </div>
     );
@@ -25,16 +24,29 @@ export default function InputArea({ onSend, onStop, isStreaming, disabled, prefi
     const [text, setText] = useState('');
     const inputRef = useRef(null);
 
-    // Prefill from edit action
     useEffect(() => {
         if (prefill?.ts > 0) {
             setText(prefill.text || '');
-            setTimeout(() => inputRef.current?.focus(), 0);
+            setTimeout(() => {
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                    inputRef.current.style.height = 'auto';
+                    inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 200)}px`;
+                }
+            }, 0);
         }
     }, [prefill?.ts]);
 
+    useEffect(() => {
+        if (text === '') {
+            if (inputRef.current) {
+                inputRef.current.style.height = 'auto';
+            }
+        }
+    }, [text]);
+
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (!text.trim() || disabled || isStreaming) return;
         onSend(text);
         setText('');
@@ -42,37 +54,53 @@ export default function InputArea({ onSend, onStop, isStreaming, disabled, prefi
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-            handleSubmit(e);
+            e.preventDefault();
+            handleSubmit();
         }
+    };
+
+    const handleInput = (e) => {
+        const target = e.target;
+        target.style.height = 'auto';
+        target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
+        setText(target.value);
     };
 
     const placeholder = disabled
         ? 'Select a model to start...'
         : isStreaming
             ? 'Responding...'
-            : 'Message... (Enter · Shift+Enter for newline)';
+            : 'Message modelctl...';
 
     return (
-        <div className="input-dock">
+        <div className="input-dock-minimal">
             {tokenCount > 0 && (
                 <TokenCounter tokenCount={tokenCount} contextLimit={contextLimit} />
             )}
 
-            <form onSubmit={handleSubmit} className="input-bar">
-                <input
+            <form onSubmit={handleSubmit} className="input-bar-minimal">
+                <textarea
                     ref={inputRef}
-                    className="chat-input"
+                    className="chat-input-textarea-minimal"
+                    rows={1}
                     placeholder={placeholder}
                     value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    onInput={handleInput}
                     onKeyDown={handleKeyDown}
                     disabled={disabled || isStreaming}
                 />
-                {isStreaming ? (
-                    <button type="button" className="stop-btn" onClick={onStop} title="Stop generating">■</button>
-                ) : (
-                    <button type="submit" className="send-btn" disabled={disabled || !text.trim()} title="Send">↑</button>
-                )}
+                
+                <div className="input-actions-wrapper">
+                    {isStreaming ? (
+                        <button type="button" className="stop-btn-minimal" onClick={onStop} title="Stop generating">
+                            <Square size={12} fill="currentColor" />
+                        </button>
+                    ) : (
+                        <button type="submit" className="send-btn-minimal" disabled={disabled || !text.trim()} title="Send message">
+                            <ArrowUp size={14} />
+                        </button>
+                    )}
+                </div>
             </form>
         </div>
     );

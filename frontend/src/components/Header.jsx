@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ChevronDown, Cpu, Terminal } from 'lucide-react';
 
 export default function Header({ selectedModel, onSelectModel }) {
     const [models, setModels] = useState([]);
@@ -19,31 +20,47 @@ export default function Header({ selectedModel, onSelectModel }) {
     }, []);
 
     return (
-        <header className="app-header flex items-center justify-between">
-            <div className="flex items-center" style={{ gap: 12 }}>
-                <svg height="24" width="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="4 17 10 11 4 5"></polyline>
-                    <line x1="12" y1="19" x2="20" y2="19"></line>
-                </svg>
+        <header className="app-header">
+            <div className="logo-container">
+                <span className="logo-prompt-green">&gt;_</span>
                 <span className="logo-text">modelctl</span>
             </div>
 
-            <div className="model-select-wrapper">
+            <div className="header-center-telemetry">
                 {loading ? (
-                    <span className="model-loading">Loading models…</span>
+                    <div className="telemetry-item amber">
+                        <span className="status-dot pulsing"></span>
+                        <span>Connecting...</span>
+                    </div>
                 ) : fetchError ? (
-                    <span className="model-loading" style={{ color: '#f85149' }}>Ollama unreachable</span>
+                    <div className="telemetry-item red">
+                        <span className="status-dot"></span>
+                        <span>Ollama Offline</span>
+                    </div>
                 ) : (
-                    <select
-                        className="model-select"
-                        value={selectedModel}
-                        onChange={(e) => onSelectModel(e.target.value)}
-                    >
-                        <option value="" disabled>Select Model</option>
-                        {models.map(m => (
-                            <option key={m.name} value={m.name}>{m.name}</option>
-                        ))}
-                    </select>
+                    <div className="telemetry-item green">
+                        <span className="status-dot pulsing"></span>
+                        <span>Ollama Active</span>
+                    </div>
+                )}
+            </div>
+
+            <div className="model-select-outer">
+                {!loading && !fetchError && (
+                    <div className="model-select-wrapper">
+                        <Cpu size={12} className="model-icon-prefix" />
+                        <select
+                            className="model-select"
+                            value={selectedModel}
+                            onChange={(e) => onSelectModel(e.target.value)}
+                        >
+                            <option value="" disabled>Select Model</option>
+                            {models.map(m => (
+                                <option key={m.name} value={m.name}>{m.name}</option>
+                            ))}
+                        </select>
+                        <ChevronDown size={12} className="model-icon-suffix" />
+                    </div>
                 )}
             </div>
         </header>
