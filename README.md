@@ -128,24 +128,11 @@ Once started, open `http://localhost:5173` in your web browser.
 
 ---
 
-## Configuration
+## Configuration (Optional)
 
-Copy the example environment configuration file and adjust variables as necessary:
+By default, the application connects to Ollama at `http://localhost:11434`. 
 
-### Windows (PowerShell)
-```powershell
-Copy-Item backend/.env.example backend/.env
-```
-
-### Windows (Command Prompt)
-```cmd
-copy backend\.env.example backend\.env
-```
-
-### macOS & Linux
-```bash
-cp backend/.env.example backend/.env
-```
+If your Ollama service is hosted on a different machine or port, copy the example environment configuration file to `backend/.env` and update the variables:
 
 | Variable | Default | Description |
 |---|---|---|
