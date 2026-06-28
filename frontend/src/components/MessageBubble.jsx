@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Check, Copy, Edit2, RotateCw, User, Terminal } from 'lucide-react';
+import { Check, Copy, Edit2, RotateCw, User, Terminal, ChevronDown, ChevronRight, HelpCircle } from 'lucide-react';
 
 function CopyButton({ text, className = 'copy-btn' }) {
     const [copied, setCopied] = useState(false);
@@ -46,11 +46,43 @@ const markdownComponents = {
     },
 };
 
+// Parses <think>thinking process</think> main response
+function parseContent(content) {
+    if (!content) return { thinking: '', response: '' };
+    
+    const thinkStart = content.indexOf('<think>');
+    if (thinkStart === -1) {
+        return { thinking: '', response: content };
+    }
+
+    const thinkEnd = content.indexOf('</think>');
+    if (thinkEnd === -1) {
+        // Thinking tag is open and currently streaming
+        return {
+            thinking: content.slice(thinkStart + 7),
+            response: '',
+            isThinkingStreaming: true
+        };
+    }
+
+    return {
+        thinking: content.slice(thinkStart + 7, thinkEnd),
+        response: content.slice(thinkEnd + 8),
+        isThinkingStreaming: false
+    };
+}
+
 export default function MessageBubble({ role, content, index, isLast, isStreaming, onRegenerate, onEdit }) {
     const isUser = role === 'user';
     const showCursor = !isUser && isLast && isStreaming;
     const showRegenerate = !isUser && isLast && !isStreaming && content;
     const showEdit = isUser && !isStreaming;
+
+    const [isThinkingExpanded, setIsThinkingExpanded] = useState(true);
+
+    const { thinking, response, isThinkingStreaming } = isUser 
+        ? { thinking: '', response: content, isThinkingStreaming: false }
+        : parseContent(content);
 
     return (
         <div className={`message-row ${role} animate-enter`}>
@@ -90,18 +122,61 @@ export default function MessageBubble({ role, content, index, isLast, isStreamin
                 </div>
 
                 <div className="github-comment-body">
-                    <div className="md-content">
-                        {isUser ? (
-                            <span className="user-message-text">{content}</span>
-                        ) : (
-                            <>
-                                <ReactMarkdown components={markdownComponents}>
-                                    {content}
-                                </ReactMarkdown>
-                                {showCursor && <span className="streaming-cursor">▋</span>}
-                            </>
-                        )}
-                    </div>
+                    {/* Initial Loading State before first token arrives */}
+                    {!isUser && !content && isStreaming ? (
+                        <div className="thinking-loader">
+                            <span className="status-dot pulsing"></span>
+                            <span className="loader-text">Thinking...</span>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Collapsible Thinking Process block */}
+                            {(thinking || isThinkingStreaming) && (
+                                <div className="thinking-accordion">
+                                    <button 
+                                        type="button"
+                                        className="thinking-toggle-btn"
+                                        onClick={() => setIsThinkingExpanded(!isThinkingExpanded)}
+                                    >
+                                        <div className="thinking-toggle-left">
+                                            {isThinkingExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                                            <HelpCircle size={13} className="thinking-toggle-icon" />
+                                            <span>
+                                                {isThinkingStreaming 
+                                                    ? 'Thinking...' 
+                                                    : 'Thinking Process'}
+                                            </span>
+                                        </div>
+                                        {isThinkingStreaming && <span className="thinking-pulse-dot"></span>}
+                                    </button>
+                                    {isThinkingExpanded && (
+                                        <div className="thinking-content">
+                                            {thinking ? (
+                                                <ReactMarkdown components={markdownComponents}>
+                                                    {thinking}
+                                                </ReactMarkdown>
+                                            ) : (
+                                                <span style={{ fontStyle: 'italic', opacity: 0.5 }}>
+                                                    Starting thought process...
+                                                </span>
+                                            )}
+                                            {isThinkingStreaming && showCursor && <span className="streaming-cursor">▋</span>}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Main Response block */}
+                            {(response || (!thinking && !isThinkingStreaming && !isUser)) && (
+                                <div className="md-content">
+                                    <ReactMarkdown components={markdownComponents}>
+                                        {response}
+                                    </ReactMarkdown>
+                                    {!isThinkingStreaming && showCursor && <span className="streaming-cursor">▋</span>}
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </div>
