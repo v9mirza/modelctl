@@ -54,25 +54,42 @@ export default function MessageBubble({ role, content, index, isLast, isStreamin
 
     return (
         <div className={`message-row ${role} animate-enter`}>
-            <div className="message-avatar-col">
-                {isUser ? (
-                    <div className="avatar-squircle user">
-                        <User size={13} />
+            <div className={`github-comment-box ${role}`}>
+                <div className="github-comment-header">
+                    <div className="comment-header-left">
+                        {isUser ? (
+                            <div className="avatar-squircle user">
+                                <User size={12} />
+                            </div>
+                        ) : (
+                            <div className="avatar-squircle assistant">
+                                <Terminal size={12} />
+                            </div>
+                        )}
+                        <span className="sender-title">{isUser ? 'You' : 'Assistant'}</span>
+                        <span className="sender-tag-mono">{isUser ? '// SYS.IN' : '// SYS.OUT'}</span>
                     </div>
-                ) : (
-                    <div className="avatar-squircle assistant">
-                        <Terminal size={13} />
-                    </div>
-                )}
-            </div>
 
-            <div className="bubble-wrapper">
-                <div className="bubble-meta-info">
-                    <span className="sender-title">{isUser ? 'You' : 'Assistant'}</span>
-                    <span className="sender-tag-mono">{isUser ? '// SYS.IN' : '// SYS.OUT'}</span>
+                    <div className="comment-header-actions">
+                        {showEdit && (
+                            <button className="comment-action-btn" onClick={() => onEdit(index)} title="Edit message">
+                                <Edit2 size={11} />
+                                <span>Edit</span>
+                            </button>
+                        )}
+                        {showRegenerate && (
+                            <button className="comment-action-btn" onClick={onRegenerate} title="Regenerate response">
+                                <RotateCw size={11} />
+                                <span>Regenerate</span>
+                            </button>
+                        )}
+                        {!isUser && (
+                            <CopyButton text={content} className="comment-action-btn" />
+                        )}
+                    </div>
                 </div>
 
-                <div className={`bubble-card ${role}`}>
+                <div className="github-comment-body">
                     <div className="md-content">
                         {isUser ? (
                             <span className="user-message-text">{content}</span>
@@ -85,25 +102,7 @@ export default function MessageBubble({ role, content, index, isLast, isStreamin
                             </>
                         )}
                     </div>
-                    {!isUser && <CopyButton text={content} className="bubble-copy-btn-modern" />}
                 </div>
-
-                {(showEdit || showRegenerate) && (
-                    <div className="message-actions-modern">
-                        {showEdit && (
-                            <button className="action-btn-modern" onClick={() => onEdit(index)}>
-                                <Edit2 size={10} />
-                                <span>Edit</span>
-                            </button>
-                        )}
-                        {showRegenerate && (
-                            <button className="action-btn-modern" onClick={onRegenerate}>
-                                <RotateCw size={10} />
-                                <span>Regenerate</span>
-                            </button>
-                        )}
-                    </div>
-                )}
             </div>
         </div>
     );

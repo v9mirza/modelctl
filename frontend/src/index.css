@@ -615,139 +615,113 @@ kbd {
 
 /* Message rows */
 .message-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 28px;
+  width: 100%;
+  margin-bottom: 24px;
   opacity: 0;
 }
 
-.message-avatar-col {
-  flex-shrink: 0;
-}
-.avatar-squircle {
-  width: 32px;
-  height: 32px;
+/* GitHub Comment Box Style */
+.github-comment-box {
+  width: 100%;
+  background: var(--bg-app);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* User header gets a slightly lighter background to distinguish it */
+.github-comment-box.user {
+  border-color: var(--border-color);
+}
+.github-comment-box.user .github-comment-header {
+  background: #1c2128; /* Slightly lighter dim slate for user author comment box */
+}
+
+.github-comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 16px;
+  height: 44px;
+}
+
+.comment-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-header-left .avatar-squircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  transition: all 0.2s ease;
 }
-.avatar-squircle.user {
+.comment-header-left .avatar-squircle.user {
   background: var(--bg-panel);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
 }
-.avatar-squircle.assistant {
+.comment-header-left .avatar-squircle.assistant {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
-  box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
+  box-shadow: 0 2px 6px rgba(31, 111, 235, 0.2);
 }
 
-.bubble-wrapper {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.bubble-meta-info {
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.sender-title {
+.comment-header-left .sender-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
 }
-.sender-tag-mono {
+
+.comment-header-left .sender-tag-mono {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   color: var(--text-muted);
 }
 
-.bubble-card {
-  padding: 12px 18px;
-  font-size: 15px;
-  line-height: 1.6;
-  position: relative;
-  border-radius: 10px;
-}
-
-.bubble-card.user {
-  background: var(--bg-bubble-user);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  display: inline-block;
-  align-self: flex-start;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-.user-message-text {
-  color: var(--text-primary);
-  white-space: pre-wrap;
-}
-
-.bubble-card.assistant {
-  background: var(--bg-bubble-assistant);
-  padding: 4px 0;
-  color: var(--text-primary);
-}
-
-/* Copy Button Overlay in Assistant message block */
-.bubble-copy-btn-modern {
-  position: absolute;
-  top: 4px;
-  right: -80px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 5px 10px;
-  border-radius: 6px;
-  cursor: pointer;
+.comment-header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  opacity: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
-}
-.message-row:hover .bubble-copy-btn-modern {
-  opacity: 1;
-}
-.bubble-copy-btn-modern:hover {
-  color: var(--text-primary);
-  border-color: var(--border-highlight);
-  background: var(--bg-input);
+  gap: 8px;
 }
 
-/* Action button items beneath message block */
-.message-actions-modern {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-.action-btn-modern {
-  background: var(--bg-panel);
+.comment-action-btn {
+  background: #21262d;
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   border-radius: 6px;
   cursor: pointer;
   padding: 4px 10px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
   transition: all 0.15s ease;
 }
-.action-btn-modern:hover {
+
+.comment-action-btn:hover {
   color: var(--text-primary);
   border-color: var(--border-highlight);
-  background: var(--bg-input);
+  background: #30363d;
+}
+
+.github-comment-body {
+  padding: 16px 20px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  background: var(--bg-app);
+}
+
+.user-message-text {
+  color: var(--text-primary);
+  white-space: pre-wrap;
 }
 
 /* Streaming Cursor Indicator */
