@@ -1,25 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp, Square } from 'lucide-react';
 
-function TokenCounter({ tokenCount, contextLimit }) {
-    const pct = tokenCount / contextLimit;
-    const color = pct > 0.85 ? '#ef4444' : pct > 0.6 ? '#f59e0b' : 'var(--accent-primary)';
-
-    return (
-        <div className="token-counter-minimal">
-            <div className="token-bar-track">
-                <div
-                    className="token-bar-fill"
-                    style={{ width: `${Math.min(pct * 100, 100)}%`, background: color }}
-                />
-            </div>
-            <span className="token-counter-text">
-                {tokenCount.toLocaleString()} / {contextLimit.toLocaleString()} tokens
-            </span>
-        </div>
-    );
-}
-
 export default function InputArea({ onSend, onStop, isStreaming, disabled, prefill, tokenCount, contextLimit }) {
     const [text, setText] = useState('');
     const inputRef = useRef(null);
@@ -74,10 +55,6 @@ export default function InputArea({ onSend, onStop, isStreaming, disabled, prefi
 
     return (
         <div className="input-dock-minimal">
-            {tokenCount > 0 && (
-                <TokenCounter tokenCount={tokenCount} contextLimit={contextLimit} />
-            )}
-
             <form onSubmit={handleSubmit} className="input-bar-minimal">
                 <textarea
                     ref={inputRef}
@@ -91,6 +68,13 @@ export default function InputArea({ onSend, onStop, isStreaming, disabled, prefi
                 />
                 
                 <div className="input-actions-wrapper">
+                    {tokenCount > 0 && (
+                        <div className="token-counter-inline" title="Token limit usage">
+                            <span className="token-counter-text">
+                                [TOK: {tokenCount.toLocaleString()} / {contextLimit.toLocaleString()}]
+                            </span>
+                        </div>
+                    )}
                     {isStreaming ? (
                         <button type="button" className="stop-btn-minimal" onClick={onStop} title="Stop generating">
                             <Square size={12} fill="currentColor" />

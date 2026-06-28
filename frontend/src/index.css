@@ -801,39 +801,10 @@ kbd {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 24px 24px;
+  padding: 14px 24px 20px;
   gap: 8px;
   z-index: 10;
   position: relative;
-}
-
-/* Toned down token load progress bar */
-.token-counter-minimal {
-  width: 100%;
-  max-width: 768px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-secondary);
-  padding: 0 4px;
-  margin-bottom: 2px;
-}
-.token-bar-track {
-  width: 60px;
-  height: 2px;
-  background: var(--border-color);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.token-bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.3s ease;
-}
-.token-counter-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
 }
 
 /* Floating capsule input dock */
@@ -878,7 +849,19 @@ kbd {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  gap: 12px;
   padding-bottom: 2px;
+}
+
+/* Inline token display inside action wrapper */
+.token-counter-inline {
+  display: flex;
+  align-items: center;
+}
+.token-counter-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-secondary);
 }
 
 /* GitHub Green send button */
@@ -921,4 +904,41 @@ kbd {
 }
 .stop-btn-minimal:hover {
   background: rgba(248, 81, 73, 0.25);
+}
+
+/* ─── Breadcrumb System ────────────────────────────────── */
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.breadcrumb-parent {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.breadcrumb-separator {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.breadcrumb-current {
+  color: var(--text-primary);
+  font-weight: 600;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Critical Code Keyword Highlight Fix ─────────────── */
+.code-block-wrapper pre code,
+.code-block-wrapper pre span,
+.code-block-wrapper code span,
+.code-block-wrapper pre code span {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }

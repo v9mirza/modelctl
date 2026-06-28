@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, Cpu, Terminal } from 'lucide-react';
 
-export default function Header({ selectedModel, onSelectModel }) {
+export default function Header({ selectedModel, onSelectModel, currentTitle }) {
     const [models, setModels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [fetchError, setFetchError] = useState(false);
@@ -21,9 +21,10 @@ export default function Header({ selectedModel, onSelectModel }) {
 
     return (
         <header className="app-header">
-            <div className="logo-container">
-                <span className="logo-prompt-green">&gt;_</span>
-                <span className="logo-text">modelctl</span>
+            <div className="header-breadcrumb">
+                <span className="breadcrumb-parent">Conversations</span>
+                <span className="breadcrumb-separator">/</span>
+                <span className="breadcrumb-current">{currentTitle}</span>
             </div>
 
             <div className="header-center-telemetry">

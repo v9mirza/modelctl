@@ -224,6 +224,9 @@ function App() {
         return () => window.removeEventListener('keydown', handler);
     }, [messages.length, handlePrefillMessage]);
 
+    const activeConversation = conversations.find(c => c.id === currentId);
+    const currentTitle = activeConversation ? activeConversation.title : 'New Chat';
+
     return (
         <div className="app-layout">
             <Sidebar
@@ -234,7 +237,11 @@ function App() {
                 onDelete={handleDeleteConversation}
             />
             <div className="main-area">
-                <Header selectedModel={selectedModel} onSelectModel={setSelectedModel} />
+                <Header
+                    selectedModel={selectedModel}
+                    onSelectModel={setSelectedModel}
+                    currentTitle={currentTitle}
+                />
 
                 {error && (
                     <div className="error-banner">
