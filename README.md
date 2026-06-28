@@ -34,45 +34,19 @@ A local-first chat interface for [Ollama](https://ollama.com). Run and chat with
 
 ## Installation and Setup
 
-### 1. Ollama Installation & Setup
+### 1. Ollama Setup
 
-Before running the application, make sure Ollama is installed and running on your system.
+Ensure [Ollama](https://ollama.com) is installed on your system. For installation details, please visit the [official Ollama download page](https://ollama.com/download).
 
-#### Windows
-1. Download and run the installer from the [Ollama download page](https://ollama.com/download).
-2. The Ollama service starts automatically in the system tray.
-3. Open Command Prompt or PowerShell, and pull the desired model (e.g., Llama 3):
-   ```cmd
-   ollama pull llama3
-   ```
+Once installed, make sure the Ollama service is running and you have pulled a model to use:
 
-#### macOS
-1. Download the macOS zip file from the [Ollama download page](https://ollama.com/download) or install via Homebrew:
-   ```bash
-   brew install ollama
-   ```
-2. Start the Ollama application or run it via the terminal:
-   ```bash
-   ollama serve
-   ```
-3. In a separate terminal, pull your model of choice:
-   ```bash
-   ollama pull llama3
-   ```
+```bash
+# Start Ollama (if not already running)
+ollama serve
 
-#### Linux
-1. Install Ollama using the official script:
-   ```bash
-   curl -fsSL https://ollama.com/install.sh | sh
-   ```
-2. Ensure the service is running (it typically starts automatically via systemd):
-   ```bash
-   sudo systemctl status ollama
-   ```
-3. Pull your model of choice:
-   ```bash
-   ollama pull llama3
-   ```
+# Pull your model of choice
+ollama pull llama3
+```
 
 ---
 
