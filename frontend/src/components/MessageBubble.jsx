@@ -37,7 +37,7 @@ const markdownComponents = {
                     style={oneDark}
                     language={match[1]}
                     PreTag="pre"
-                    customStyle={{ background: '#0d1117', border: 'none', borderRadius: '0 0 8px 8px', fontSize: 13, margin: 0, padding: '12px' }}
+                    customStyle={{ background: 'var(--bg-input)', border: 'none', borderRadius: '0 0 8px 8px', fontSize: 13, margin: 0, padding: '12px' }}
                 >
                     {codeText}
                 </SyntaxHighlighter>

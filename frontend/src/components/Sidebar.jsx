@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Search, Terminal, Trash2, X } from 'lucide-react';
 
 export default function Sidebar({ conversations, currentId, onNewChat, onSelect, onDelete }) {
     const [search, setSearch] = useState('');
+    const searchInputRef = useRef(null);
+
+    // Focus search on Ctrl+K or Cmd+K
+    useEffect(() => {
+        const handler = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                searchInputRef.current?.focus();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, []);
 
     const filtered = search.trim()
         ? conversations.filter(c => c.title.toLowerCase().includes(search.toLowerCase()))
@@ -29,6 +42,7 @@ export default function Sidebar({ conversations, currentId, onNewChat, onSelect,
             <div className="sidebar-search-wrapper">
                 <Search size={13} className="search-icon" />
                 <input
+                    ref={searchInputRef}
                     className="sidebar-search"
                     type="text"
                     placeholder="Search conversations..."

@@ -54,18 +54,6 @@ function App() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations)); } catch {}
     }, [conversations]);
 
-    // Ctrl+Shift+O → new chat
-    useEffect(() => {
-        const handler = (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key === 'O') {
-                e.preventDefault();
-                handleNewChat();
-            }
-        };
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
-    }, []);
-
     const updateConversation = useCallback((id, updater) => {
         setConversations(prev => prev.map(c => c.id === id ? updater(c) : c));
     }, []);
@@ -76,6 +64,20 @@ function App() {
         setCurrentId(conv.id);
         setError('');
     }, []);
+
+    // Ctrl+Shift+O or Alt+N (⌥N) → new chat
+    useEffect(() => {
+        const handler = (e) => {
+            const isCtrlShiftO = e.ctrlKey && e.shiftKey && e.key === 'O';
+            const isAltN = e.altKey && e.key.toLowerCase() === 'n';
+            if (isCtrlShiftO || isAltN) {
+                e.preventDefault();
+                handleNewChat();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [handleNewChat]);
 
     const handleSelectConversation = useCallback((id) => {
         setCurrentId(id);
